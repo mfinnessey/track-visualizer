@@ -1,2 +1,4 @@
 notes
 express/node_modules
+# environment variables file
+express/.env
