@@ -12,6 +12,7 @@ var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var callbackRouter = require('./routes/callback');
 var refreshTokenRouter = require('./routes/refresh_token');
+var bpmRouter = require('./routes/bpm');
 
 var app = express();
 
@@ -34,6 +35,7 @@ app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/callback', callbackRouter);
 app.use('/refresh_token', refreshTokenRouter);
+app.use('/bpm', bpmRouter);
 
 // error handler
 app.use(function(err, req, res, next) {
