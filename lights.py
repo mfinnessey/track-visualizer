@@ -14,17 +14,16 @@ LED_INVERT = False
 LED_CHANNEL = 0
 
 def bpm_pulse(strip, color, bpm):
-    beat_length_ms = 60000 / bpm
+    beat_length = 60.0 / bpm
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, color)
-    strip.show()
     while True:
-        time.sleep(beat_length_ms)
-        strip.setBrightness(128)
+        strip.setBrightness(0)
         strip.show()
-        time.sleep(beat_length_ms)
+        time.sleep(beat_length)
         strip.setBrightness(255)
         strip.show()
+        time.sleep(beat_length)
 
 if __name__ == "__main__":
     print("starting!")
