@@ -19,9 +19,12 @@ def bpm_pulse(strip, color, bpm):
         strip.setPixelColor(i, color)
     strip.show()
     while True:
-        strip.setBrightness(0)
+        time.sleep(beat_length_ms)
+        strip.setBrightness(128)
+        strip.show()
         time.sleep(beat_length_ms)
         strip.setBrightness(255)
+        strip.show()
 
 if __name__ == "__main__":
     print("starting!")
