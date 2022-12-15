@@ -28,6 +28,22 @@ LED_CHANNEL = 0
 # messages are padded to this length to prevent concatenation of multiple messages
 MAX_MSG_LENGTH = 100
 
+def two_color_cycle(strip, color_1, color_2, bpm):
+    beat_length = 60.0 / bpm
+    strip.setBrightness(255)
+    while True:
+        # end if new message arrived
+        if new_msg:
+            return
+        for i in range(strip.numPixels()):
+            strip.setPixelColor(i, color_1)
+        strip.show()
+        time.sleep(beat_length)
+        for i in range(strip.numPixels()):
+            strip.setPixelColor(i, color_2)
+        strip.show()
+        time.sleep(beat_length)
+
 def bpm_pulse(strip, color, bpm):
     beat_length = 60.0 / bpm
     for i in range(strip.numPixels()):
