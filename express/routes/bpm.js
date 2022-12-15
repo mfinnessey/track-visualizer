@@ -8,13 +8,6 @@ var fs = require('fs');
 const pipe_name = '../track-visualizer';
 
 const pipe = fs.createWriteStream(pipe_name);
-//const fd = fs.openSync(pipe_name, 'r+');
-//let readstream = fs.createReadStream(null, {fd});
-
-// readstream.on('data', data =>{
-//     console.log("hi");
-//     console.log(data.toString());
-// });
 
 router.get('/', function(req, res) {
 
@@ -30,7 +23,6 @@ router.get('/', function(req, res) {
         // successful request
         if (!error && response.statusCode === 200) {
             var current_id = JSON.parse(body).item.id;
-            console.log(current_id);
             // get audio analysis of currently playing song
             reqInfo = {
                 url: 'https://api.spotify.com/v1/audio-features?ids=' + current_id,
@@ -39,14 +31,10 @@ router.get('/', function(req, res) {
             request.get(reqInfo, function(error, response, body) {
                 if (!error && response.statusCode === 200) {
                     var bpm = JSON.parse(body).audio_features[0].tempo;
-                    console.log(bpm);
                     pipe.write(bpm.toString());
-                    console.log('attempted to write to pipe');
 
                 }
                 else{
-                    console.log(response.statusCode);
-                    console.log(body);
                     res.redirect('/#' +
                                  querystring.stringify({
                                      error: 'invalid_token'
@@ -55,8 +43,6 @@ router.get('/', function(req, res) {
             });
 
         } else {
-            console.log(response.statusCode);
-            console.log(body);
             res.redirect('/#' +
                          querystring.stringify({
                              error: 'invalid_token'
