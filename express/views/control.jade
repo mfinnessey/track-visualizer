@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1= "Control Page"
+  form(action="control")
+    label(id="r") Red
+    input(type="text" id="r", name="r")
+    label(id="g") Green
+    input(type="text" id="g" name="g")
+    label(id="b") Blue
+    input(type="text" id="b" name="b")
+    select(name="effect")
+      option(value="bpm_pulse") BPM Pulse
+      option(value="two_color-cycle") Two Color Cycle
+    input(type="submit" value="Update")
+

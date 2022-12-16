@@ -11,9 +11,17 @@ const pipe = fs.createWriteStream(pipe_name);
 
 router.get('/', function(req, res) {
 
+    res.render('control');
+
     var access_token = req.cookies["access_token"];
 
-    // get currently playing song
+    var effect = req.query.effect;
+    var R = req.query.r;
+    var G = req.query.g;
+    var B = req.query.b;
+
+    // get currently playing song information if other information was provided
+    if(R == null) return;
     var reqInfo = {
         url: 'https://api.spotify.com/v1/me/player/currently-playing',
         headers: {'Authorization': 'Bearer ' + access_token},
@@ -30,8 +38,9 @@ router.get('/', function(req, res) {
             };
             request.get(reqInfo, function(error, response, body) {
                 if (!error && response.statusCode === 200) {
-                    var bpm = JSON.parse(body).audio_features[0].tempo;
-                    pipe.write(bpm.toString());
+                    var bpm = Math.round(JSON.parse(body).audio_features[0].tempo).toString();
+                    var msg = effect + '|' + R + ',' + G + ',' + B + '|' + bpm;
+                    pipe.write(msg);
 
                 }
                 else{
@@ -49,7 +58,6 @@ router.get('/', function(req, res) {
                          }));
         }
     });
-
 });
 
 module.exports = router;
