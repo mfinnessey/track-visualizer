@@ -115,15 +115,22 @@ if __name__ == "__main__":
         # spawn light control thread, defaulting to bpm pulsing blue @ 120
         msg = "bpm_pulse|000,000,255|120"
         data = parse_msg(msg)
-        lights = threading.Thread(target = light_control_thread(strip))
+        lights = threading.Thread(target = light_control_thread, args=(strip,))
+        lights.start()
         while True:
-            msg = os.read(pipe, MAX_MSG_LENGTH)
+            # retry to avoid weird edge case around node startup
+            while True:
+                try:
+                    msg = os.read(pipe, MAX_MSG_LENGTH)
+                except BlockingIOError:
+                    time.sleep(0.1)
+                    continue
+                break
             # wait 1 second after an unsuccessful read attempt
             if not msg:
                 time.sleep(1)
             else:
-                print("Read msg: " + str(msg))
-                data = parse_msg(msg)
+                data = parse_msg(str(msg)[2:-1])
                 # notify light control thread of new message
                 new_msg_lock.acquire()
                 new_msg = True
