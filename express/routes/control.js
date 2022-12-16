@@ -6,12 +6,11 @@ var router = express.Router();
 
 var fs = require('fs');
 const pipe_name = '../track-visualizer';
+const maxMessageLength = 100;
 
 const pipe = fs.createWriteStream(pipe_name);
 
 router.get('/', function(req, res) {
-
-    res.render('control');
 
     var access_token = req.cookies["access_token"];
 
@@ -21,7 +20,10 @@ router.get('/', function(req, res) {
     var B = req.query.b;
 
     // get currently playing song information if other information was provided
-    if(R == null) return;
+    if(R == null) {
+        res.render('control');
+        return;
+    }
     var reqInfo = {
         url: 'https://api.spotify.com/v1/me/player/currently-playing',
         headers: {'Authorization': 'Bearer ' + access_token},
@@ -40,6 +42,8 @@ router.get('/', function(req, res) {
                 if (!error && response.statusCode === 200) {
                     var bpm = Math.round(JSON.parse(body).audio_features[0].tempo).toString();
                     var msg = effect + '|' + R + ',' + G + ',' + B + '|' + bpm;
+                    // pad to prevent erroneous combination of two messages on client end
+                    msg.padEnd(maxMessageLength);
                     pipe.write(msg);
 
                 }
@@ -58,6 +62,8 @@ router.get('/', function(req, res) {
                          }));
         }
     });
+
+    res.render('control');
 });
 
 module.exports = router;
