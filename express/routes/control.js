@@ -15,12 +15,15 @@ router.get('/', function(req, res) {
     var access_token = req.cookies["access_token"];
 
     var effect = req.query.effect;
-    var R = req.query.r;
-    var G = req.query.g;
-    var B = req.query.b;
+    var r0 = req.query.r0;
+    var g0 = req.query.g0;
+    var b0 = req.query.b0;
+    var r1 = req.query.r1;
+    var g1 = req.query.g1;
+    var b1 = req.query.b1;
 
     // get currently playing song information if other information was provided
-    if(R == null) {
+    if(r0 == null) {
         res.render('control');
         return;
     }
@@ -41,7 +44,12 @@ router.get('/', function(req, res) {
             request.get(reqInfo, function(error, response, body) {
                 if (!error && response.statusCode === 200) {
                     var bpm = Math.round(JSON.parse(body).audio_features[0].tempo).toString();
-                    var msg = effect + '|' + R + ',' + G + ',' + B + '|' + bpm;
+                    var colorString = r0 + ',' + g0 + ',' + b0;
+                    // add secondary color if applicable
+                    if(effect == "two_color_cycle"){
+                        colorString += ';' + r1 + g1 + b1;
+                    }
+                    var msg = effect + '|' + colorString + '|' + bpm;
                     // pad to prevent erroneous combination of two messages on client end
                     msg.padEnd(maxMessageLength);
                     pipe.write(msg);

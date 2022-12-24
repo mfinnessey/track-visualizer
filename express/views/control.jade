@@ -3,14 +3,27 @@ extends layout
 block content
   h1= "Control Page"
   form(action="control")
-    label(id="r") Red
-    input(type="text" id="r", name="r")
-    label(id="g") Green
-    input(type="text" id="g" name="g")
-    label(id="b") Blue
-    input(type="text" id="b" name="b")
+    div(class="primary-color")
+      p
+        strong Primary Color: 
+      label(id="r0") Red
+      input(type="text" id="r0", name="r0")
+      label(id="g0") Green
+      input(type="text" id="g0" name="g0")
+      label(id="b0") Blue
+      input(type="text" id="b0" name="b0")
+    div(class="secondary-color")
+      p
+        strong Secondary Color: 
+      label(id="r1") Red
+      input(type="text" id="r1", name="r1")
+      label(id="g1") Green
+      input(type="text" id="g1" name="g1")
+      label(id="b1") Blue
+      input(type="text" id="b1" name="b1")
     select(name="effect")
       option(value="bpm_pulse") BPM Pulse
-      option(value="two_color-cycle") Two Color Cycle
+      option(value="two_color_cycle") Two Color Cycle
+
     input(type="submit" value="Update")
 
