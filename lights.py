@@ -15,7 +15,7 @@ data = None
 
 
 # light constants
-LED_COUNT = 50
+LED_COUNT = 294
 LED_PIN = 18 # GPIO pins are not necessarily the same as physical pins
 LED_FREQ_HZ = 800000
 LED_DMA = 10
@@ -27,6 +27,25 @@ LED_CHANNEL = 0
 
 # messages are padded to this length to prevent concatenation of multiple messages
 MAX_MSG_LENGTH = 100
+
+
+def snake(strip, color, bpm):
+    beat_length = 60.0 / bpm
+    strip.setBrightness(255)
+    on = 0
+    while True:
+        # end if new message arrived
+        if new_msg:
+            return
+        for i in range(strip.numPixels()):
+            if i != on:
+                strip.setPixelColor(i, Color(0, 0, 0))
+            else:
+                strip.setColor(i, on)
+            on = (on + 1) % strip.numPixels()
+        strip.show()
+        time.sleep(beat_length)
+
 
 def two_color_cycle(strip, color_1, color_2, bpm):
     beat_length = 60.0 / bpm
@@ -91,6 +110,8 @@ def light_control_thread(strip):
         # carry out requested effect
         if effect == "two_color_cycle":
             two_color_cycle(strip, colors[0], colors[1], bpm)
+        elif effect == "snake":
+            two_color_cycle(strip, colors[0], bpm)
         else: # default to bpm pulsing
             bpm_pulse(strip, colors[0], bpm)
 
