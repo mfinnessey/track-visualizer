@@ -44,7 +44,7 @@ def snake(strip, color, bpm):
             if i != on:
                 strip.setPixelColor(i, Color(0, 0, 0))
             else:
-                strip.setPixelColor(i, on)
+                strip.setPixelColor(i, color)
             on = (on + 1) % strip.numPixels()
         strip.show()
         time.sleep(beat_length)
