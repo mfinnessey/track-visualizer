@@ -15,16 +15,11 @@ data = None
 
 
 # light constants
-<<<<<<< HEAD
-LED_COUNT = 50
 # GPIO pin number not physical
 # uses PCM to avoid conflict with analog audio out
 # (see https://github.com/rpi-ws281x/rpi-ws281x-python/tree/master/library)
 LED_PIN = 21
-=======
 LED_COUNT = 294
-LED_PIN = 18 # GPIO pins are not necessarily the same as physical pins
->>>>>>> dev
 LED_FREQ_HZ = 800000
 LED_DMA = 10
 LED_BRIGHTNESS = 255

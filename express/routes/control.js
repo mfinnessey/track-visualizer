@@ -47,11 +47,7 @@ router.get('/', function(req, res) {
                     var colorString = r0 + ',' + g0 + ',' + b0;
                     // add secondary color if applicable
                     if(effect == "two_color_cycle"){
-<<<<<<< HEAD
                         colorString += ';' + r1 + ',' + g1 + ',' +  b1;
-=======
-                        colorString += ';' + r1 + g1 + b1;
->>>>>>> dev
                     }
                     var msg = effect + '|' + colorString + '|' + bpm;
                     // pad to prevent erroneous combination of two messages on client end
