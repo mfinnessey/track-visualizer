@@ -114,7 +114,7 @@ def light_control_thread(strip):
         if effect == "two_color_cycle":
             two_color_cycle(strip, colors[0], colors[1], bpm)
         elif effect == "snake":
-            two_color_cycle(strip, colors[0], bpm)
+            snake(strip, colors[0], bpm)
         else: # default to bpm pulsing
             bpm_pulse(strip, colors[0], bpm)
 
