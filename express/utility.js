@@ -8,7 +8,7 @@ module.exports = {
     // app configuration information
     client_id: 'efb4e6813d584347a2167efa37ff680a',
     client_secret: process.env.CLIENT_SECRET,
-    redirect_uri: 'http://raspberrypi.local:8888/callback',
+    redirect_uri: 'http://raspberrypi.lan/callback',
 
 
     /**
