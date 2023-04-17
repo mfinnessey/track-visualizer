@@ -26,14 +26,6 @@ router.get('/', function(req, res) {
     var g1 = req.query.g1;
     var b1 = req.query.b1;
 
-    // a primary color must always be specified
-    if(r0 == null || g0 == null || b0 == null) res.redirect('control');
-
-    // some effects require a secondary color to be specified
-    if(r1 == null || g1 == null || b1 == null){
-        if(effect == "two_color_cycle") res.redirect('control');
-    }
-
     // get currently playing song information to sync lights to tempo
     var reqInfo = {
         url: 'https://api.spotify.com/v1/me/player/currently-playing',
