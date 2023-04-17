@@ -45,9 +45,9 @@ def snake(strip, color, bpm):
                 strip.setPixelColor(i, Color(0, 0, 0))
             else:
                 strip.setPixelColor(i, color)
-            on = (on + 1) % strip.numPixels()
         strip.show()
         time.sleep(beat_length)
+        on = (on + 1) % strip.numPixels()
 
 
 def two_color_cycle(strip, color_1, color_2, bpm):
