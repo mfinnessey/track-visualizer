@@ -26,6 +26,9 @@ router.get('/', function(req, res) {
     var g1 = req.query.g1;
     var b1 = req.query.b1;
 
+    // any valid message requires an effect and primary color
+    if(effect == null || r0 == null || g0 == null || b0 == null) return;
+
     // get currently playing song information to sync lights to tempo
     var reqInfo = {
         url: 'https://api.spotify.com/v1/me/player/currently-playing',
@@ -46,6 +49,8 @@ router.get('/', function(req, res) {
                     var colorString = r0 + ',' + g0 + ',' + b0;
                     // add secondary color if applicable
                     if(effect == "two_color_cycle"){
+                        // two color cycle requires two colors to be valid
+                        if(r1 == null || g1 == null || b1 == null) return;
                         colorString += ';' + r1 + ',' + g1 + ',' +  b1;
                     }
                     var msg = effect + '|' + colorString + '|' + bpm;
