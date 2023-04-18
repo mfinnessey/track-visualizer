@@ -37,19 +37,29 @@ def snake(strip, color, bpm):
     """Create a snake effect on LED strips."""
     beat_length = 60.0 / bpm
     strip.setBrightness(255)
-    on = 0
+    head = 3
+    tail = 0
     while True:
         # end if new message arrived
         if new_msg:
             return
         for i in range(strip.numPixels()):
-            if i != on:
-                strip.setPixelColor(i, Color(0, 0, 0))
+            # snake not wrapped
+            if head > tail:
+                if i >= tail and i <= head:
+                    strip.setPixelColor(i, color)
+                else:
+                    strip.setPixelColor(i, Color(0, 0, 0))
+            # snake wrapped at end
             else:
-                strip.setPixelColor(i, color)
+                if i <= head or i >= tail:
+                    strip.setPixelColor(i, color)
+                else:
+                    strip.setPixelColor(i, Color(0, 0, 0))
         strip.show()
         time.sleep(beat_length)
-        on = (on + 1) % strip.numPixels()
+        head = (head + 1) % strip.numPixels()
+        tail = (tail + 1) % strip.numPixels()
 
 
 def two_color_cycle(strip, color_1, color_2, bpm):
