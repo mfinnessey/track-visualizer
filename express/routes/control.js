@@ -23,7 +23,13 @@ router.get('/', function(req, res) {
     var spotifySync = req.query.spotify_sync;
 
     // any valid message requires an effect and primary color
-    if(effect == null || r0 == null || g0 == null || b0 == null) return;
+    // the page is rendered here in the case that this is the user's
+    // initial navigation to the control page in which case all paramters
+    // are expected to be null
+    if(effect == null || r0 == null || g0 == null || b0 == null){
+        res.render('control');
+        return;
+    }
 
     // spotify sync requested, so get bpm information from spotify
     if(req.query.spotify_sync){
