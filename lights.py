@@ -33,6 +33,18 @@ LED_CHANNEL = 0
 MAX_MSG_LENGTH = 100
 
 
+def solid_color(strip, color):
+    """Make the entire LED strip one color."""
+    for i in range(strip.numPixels()):
+        strip.setPixelColor(i, color)
+    strip.setBrightness(255)
+    strip.show()
+    while True:
+        # end if new message arrived
+        if new_msg:
+            return
+
+
 def snake(strip, color, bpm):
     """Create a snake effect on LED strips."""
     beat_length = 60.0 / bpm
@@ -133,6 +145,8 @@ def __light_control_thread(strip):
             two_color_cycle(strip, colors[0], colors[1], bpm)
         elif effect == "snake":
             snake(strip, colors[0], bpm)
+        elif effect == "solid_color":
+            solid_color(strip, colors[0])
         # default to bpm pulsing
         else:
             bpm_pulse(strip, colors[0], bpm)
