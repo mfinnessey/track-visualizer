@@ -37,7 +37,7 @@ def snake(strip, color, bpm):
     """Create a snake effect on LED strips."""
     beat_length = 60.0 / bpm
     strip.setBrightness(255)
-    head = 3
+    head = 12
     tail = 0
     while True:
         # end if new message arrived
