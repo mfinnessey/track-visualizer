@@ -33,6 +33,30 @@ LED_CHANNEL = 0
 MAX_MSG_LENGTH = 100
 
 
+def wheel(pos):
+    """Generate rainbow colors across 0-255 positions."""
+    if pos < 85:
+        return Color(pos * 3, 255 - pos * 3, 0)
+    elif pos < 170:
+        pos -= 85
+        return Color(255 - pos * 3, 0, pos * 3)
+    else:
+        pos -= 170
+        return Color(0, pos * 3, 255 - pos * 3)
+
+
+def rainbow_solid(strip):
+    """Make the LED strip stay on in a rainbow"""
+    for i in range(strip.numPixels()):
+        strip.setPixelColor(i, wheel(i * 255 / strip.numPixels()))
+    strip.setBrightness(255)
+    strip.show()
+    while True:
+        # end if new message
+        if new_msg:
+            return
+
+
 def solid_color(strip, color):
     """Make the entire LED strip one color."""
     for i in range(strip.numPixels()):
@@ -147,6 +171,8 @@ def __light_control_thread(strip):
             snake(strip, colors[0], bpm)
         elif effect == "solid_color":
             solid_color(strip, colors[0])
+        elif effect == "rainbow_solid":
+            rainbow_solid(strip)
         # default to bpm pulsing
         else:
             bpm_pulse(strip, colors[0], bpm)
