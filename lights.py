@@ -1,5 +1,5 @@
 #!/bin/python3
-
+"""Control ws2812 LEDs from RPi based off of incoming control messages."""
 import os
 import errno
 import time
@@ -15,11 +15,11 @@ data = None
 
 
 # light constants
-LED_COUNT = 50
 # GPIO pin number not physical
 # uses PCM to avoid conflict with analog audio out
 # (see https://github.com/rpi-ws281x/rpi-ws281x-python/tree/master/library)
 LED_PIN = 21
+LED_COUNT = 294
 LED_FREQ_HZ = 800000
 LED_DMA = 10
 LED_BRIGHTNESS = 255
@@ -28,10 +28,54 @@ LED_CHANNEL = 0
 
 # communication constants
 
-# messages are padded to this length to prevent concatenation of multiple messages
+# messages are padded to this length to prevent concatenation of multiple
+# messages
 MAX_MSG_LENGTH = 100
 
+
+def solid_color(strip, color):
+    """Make the entire LED strip one color."""
+    for i in range(strip.numPixels()):
+        strip.setPixelColor(i, color)
+    strip.setBrightness(255)
+    strip.show()
+    while True:
+        # end if new message arrived
+        if new_msg:
+            return
+
+
+def snake(strip, color, bpm):
+    """Create a snake effect on LED strips."""
+    beat_length = 60.0 / bpm
+    strip.setBrightness(255)
+    head = 12
+    tail = 0
+    while True:
+        # end if new message arrived
+        if new_msg:
+            return
+        for i in range(strip.numPixels()):
+            # snake not wrapped
+            if head > tail:
+                if i >= tail and i <= head:
+                    strip.setPixelColor(i, color)
+                else:
+                    strip.setPixelColor(i, Color(0, 0, 0))
+            # snake wrapped at end
+            else:
+                if i <= head or i >= tail:
+                    strip.setPixelColor(i, color)
+                else:
+                    strip.setPixelColor(i, Color(0, 0, 0))
+        strip.show()
+        time.sleep(beat_length)
+        head = (head + 1) % strip.numPixels()
+        tail = (tail + 1) % strip.numPixels()
+
+
 def two_color_cycle(strip, color_1, color_2, bpm):
+    """Alternate between two colors on LED strips."""
     beat_length = 60.0 / bpm
     strip.setBrightness(255)
     while True:
@@ -47,7 +91,9 @@ def two_color_cycle(strip, color_1, color_2, bpm):
         strip.show()
         time.sleep(beat_length)
 
+
 def bpm_pulse(strip, color, bpm):
+    """Pulse LED strip on and off on a singular color."""
     beat_length = 60.0 / bpm
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, color)
@@ -62,11 +108,14 @@ def bpm_pulse(strip, color, bpm):
         strip.show()
         time.sleep(beat_length)
 
-def color_from_list(list):
+
+def __color_from_list(list):
     return Color(int(list[0]), int(list[1]), int(list[2]))
 
-def parse_msg(msg):
-    # no checking for malformed messages as sensible recovery is likely impossible
+
+def __parse_msg(msg):
+    # no checking for malformed messages as sensible recovery
+    # is likely impossible
 
     # format of msg is effect|color1;(color2)|bpm
     # colors are specified as RRR,GGG,BBB
@@ -74,12 +123,12 @@ def parse_msg(msg):
     # process colors
     components[1] = components[1].split(';')
     colors_lists = [color.split(',') for color in components[1]]
-    components[1] = [color_from_list(color) for color in colors_lists]
+    components[1] = [__color_from_list(color) for color in colors_lists]
     components[2] = int(components[2])
     return components
 
 
-def light_control_thread(strip):
+def __light_control_thread(strip):
     global new_msg
     while True:
         # acknowledge new msg
@@ -94,7 +143,12 @@ def light_control_thread(strip):
         # carry out requested effect
         if effect == "two_color_cycle":
             two_color_cycle(strip, colors[0], colors[1], bpm)
-        else: # default to bpm pulsing
+        elif effect == "snake":
+            snake(strip, colors[0], bpm)
+        elif effect == "solid_color":
+            solid_color(strip, colors[0])
+        # default to bpm pulsing
+        else:
             bpm_pulse(strip, colors[0], bpm)
 
 
@@ -110,15 +164,16 @@ if __name__ == "__main__":
     pipe = os.open(pipe_name, os.O_RDONLY | os.O_NONBLOCK)
 
     # begin strip operations
-    strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
+    strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT,
+                       LED_BRIGHTNESS, LED_CHANNEL)
     strip.begin()
 
     # process messages
     try:
         # spawn light control thread, defaulting to bpm pulsing blue @ 120
         msg = "bpm_pulse|000,000,255|120"
-        data = parse_msg(msg)
-        lights = threading.Thread(target = light_control_thread, args=(strip,))
+        data = __parse_msg(msg)
+        lights = threading.Thread(target=__light_control_thread, args=(strip,))
         lights.start()
         while True:
             # retry to avoid weird edge case around node startup
@@ -133,7 +188,7 @@ if __name__ == "__main__":
             if not msg:
                 time.sleep(1)
             else:
-                data = parse_msg(str(msg)[2:-1])
+                data = __parse_msg(str(msg)[2:-1])
                 # notify light control thread of new message
                 new_msg_lock.acquire()
                 new_msg = True

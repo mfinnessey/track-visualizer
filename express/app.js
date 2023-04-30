@@ -52,7 +52,7 @@ app.use(function(err, req, res, next) {
 app.use(function(req, res, next) {
     next(createError(404));
 });
-console.log('Listening on 8888');
-app.listen(8888);
+console.log('Listening on 80');
+app.listen(80);
 
 module.exports = app;
