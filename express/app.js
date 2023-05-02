@@ -13,6 +13,7 @@ var loginRouter = require('./routes/login');
 var callbackRouter = require('./routes/callback');
 var refreshTokenRouter = require('./routes/refresh_token');
 var controlRouter = require('./routes/control');
+var restartRouter = require('./routes/restart');
 
 var app = express();
 
@@ -36,6 +37,7 @@ app.use('/login', loginRouter);
 app.use('/callback', callbackRouter);
 app.use('/refresh_token', refreshTokenRouter);
 app.use('/control', controlRouter);
+app.use('/restart', restartRouter);
 
 // error handler
 app.use(function(err, req, res, next) {
