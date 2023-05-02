@@ -37,13 +37,13 @@ def wheel(pos):
     """Generate rainbow colors across 0-255 positions."""
     pos = int(pos)
     if pos < 85:
-        return Color(255 - pos * 3, 0, pos * 3)
+        return Color(int(255 - pos * 2.9), 0, int(pos * 2.9))
     elif pos < 170:
         pos -= 85
         return Color(0, pos * 3, 255 - pos * 3)
     else:
         pos -= 170
-        return Color(int(pos * 2.9), int(255 - pos * 2.9), 0)
+        return Color(pos * 3, 255 - pos * 3, 0)
 
 
 def rainbow_solid(strip):
