@@ -1,6 +1,7 @@
 #!/bin/sh
 
 cd /home/led/track-visualizer
+git checkout pi-dev
 git pull origin
 
 screen -X -S server quit
