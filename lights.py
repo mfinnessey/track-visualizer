@@ -43,7 +43,7 @@ def wheel(pos):
         return Color(0, pos * 3, 255 - pos * 3)
     else:
         pos -= 170
-        return Color(pos * 3, 255 - pos * 3, 0)
+        return Color(int(pos * 2.9), int(255 - pos * 2.9), 0)
 
 
 def rainbow_solid(strip):
