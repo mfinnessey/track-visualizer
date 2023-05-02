@@ -37,7 +37,7 @@ def wheel(pos):
     """Generate rainbow colors across 0-255 positions."""
     pos = int(pos)
     if pos < 85:
-        return Color(int(255 - pos * 2.9), 0, int(pos * 2.9))
+        return Color(int(255 - pos * 2.9), 0, int(40 + pos * 2.5))
     elif pos < 170:
         pos -= 85
         return Color(0, pos * 3, 255 - pos * 3)
