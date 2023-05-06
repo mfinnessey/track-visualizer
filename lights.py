@@ -140,7 +140,7 @@ def two_color_cycle(strip, color_1, color_2, bpm):
         if shift_towards_color_2:
             cur_values = tuple(map(operator.add, cur_values, step_values))
         else:
-            cur_values = tuple(map(operator.sub), cur_values, step_values)
+            cur_values = tuple(map(operator.sub, cur_values, step_values))
 
 
 def bpm_pulse(strip, color, bpm):
