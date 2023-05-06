@@ -1,0 +1,6 @@
+[general]
+bars = 6
+[output]
+method = raw
+raw_target = ./cava.fifo
+bit_format = 16bit

@@ -6,7 +6,6 @@ import time
 import threading
 import operator  # for fun tuple math
 from rpi_ws281x import PixelStrip, Color
-import tempfile
 import subprocess
 import struct
 
@@ -32,7 +31,6 @@ LED_CHANNEL = 0
 
 # cava constants
 BARS_NUMBER = 6
-OUTPUT_BIT_FORMAT = "16bit"
 RAW_TARGET = "./cava.fifo"
 
 # communication constants
@@ -49,29 +47,14 @@ def histogram(strip):
     Heavily derived from the example at
     https://github.com/karlstav/cava/issues/123#issuecomment-307891020
     """
-    conpat = """
-[general]
-bars = %d
-[output]
-method = raw
-raw_target = %s
-bit_format = %s
-"""
-    config = conpat % (BARS_NUMBER, RAW_TARGET, OUTPUT_BIT_FORMAT)
-    bytetype, bytesize, bytenorm = (
-        ("H", 2, 65535) if OUTPUT_BIT_FORMAT == "16bit" else ("B", 1, 255)
-    )
-    with tempfile.NamedTemporaryFile() as config_file:
-        config_file.write(config.encode())
-        config_file.flush()
-
-        subprocess.Popen(["cava", "-p", config_file.name],
-                         stdout=subprocess.PIPE)
-        chunk = bytesize * BARS_NUMBER
-        fmt = bytetype * BARS_NUMBER
-        if not os.path.exists(RAW_TARGET):
-            os.mkfifo(RAW_TARGET)
-        source = open(RAW_TARGET, "rb")
+    bytetype, bytesize, bytenorm = ("H", 2, 65535)
+    subprocess.Popen(["cava", "-p", ".cava-config"],
+                     stdout=subprocess.PIPE)
+    chunk = bytesize * BARS_NUMBER
+    fmt = bytetype * BARS_NUMBER
+    if not os.path.exists(RAW_TARGET):
+        os.mkfifo(RAW_TARGET)
+    source = open(RAW_TARGET, "rb")
 
     while True:
         data = source.read(chunk)
