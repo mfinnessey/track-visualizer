@@ -6,6 +6,9 @@ import time
 import threading
 import operator  # for fun tuple math
 from rpi_ws281x import PixelStrip, Color
+import tempfile
+import subprocess
+import struct
 
 # globals (for shared state between threads)
 # shared state to notify light control thread of a newly arrived msg
@@ -27,11 +30,55 @@ LED_BRIGHTNESS = 255
 LED_INVERT = False
 LED_CHANNEL = 0
 
+# cava constants
+BARS_NUMBER = 6
+OUTPUT_BIT_FORMAT = "16bit"
+RAW_TARGET = "./cava.fifo"
+
 # communication constants
 
 # messages are padded to this length to prevent concatenation of multiple
 # messages
 MAX_MSG_LENGTH = 100
+
+
+def histogram(strip):
+    """
+    Create a rainbow-colored histogram of frequencies in the current audio.
+
+    Heavily derived from the example at
+    https://github.com/karlstav/cava/issues/123#issuecomment-307891020
+    """
+    conpat = """
+[general]
+bars = %d
+[output]
+method = raw
+raw_target = %s
+bit_format = %s
+"""
+    config = conpat % (BARS_NUMBER, RAW_TARGET, OUTPUT_BIT_FORMAT)
+    bytetype, bytesize, bytenorm = (
+        ("H", 2, 65535) if OUTPUT_BIT_FORMAT == "16bit" else ("B", 1, 255)
+    )
+    with tempfile.NamedTemporaryFile() as config_file:
+        config_file.write(config.encode())
+        config_file.flush()
+
+        subprocess.Popen(["cava", "-p", config_file.name],
+                         stdout=subprocess.PIPE)
+        chunk = bytesize * BARS_NUMBER
+        fmt = bytetype * BARS_NUMBER
+        if not os.path.exists(RAW_TARGET):
+            os.mkfifo(RAW_TARGET)
+        source = open(RAW_TARGET, "rb")
+
+    while True:
+        data = source.read(chunk)
+        sample = [i / bytenorm for i in struct.unpack(fmt, data)]
+        print(sample)
+        if new_msg:
+            return
 
 
 def wheel(pos):
@@ -200,6 +247,8 @@ def __light_control_thread(strip):
             solid_color(strip, colors[0])
         elif effect == "rainbow_solid":
             rainbow_solid(strip)
+        elif effect == "historgram":
+            histogram(strip)
         # default to bpm pulsing
         else:
             bpm_pulse(strip, colors[0], bpm)
