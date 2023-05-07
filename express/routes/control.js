@@ -13,23 +13,14 @@ const pipe = fs.createWriteStream(pipe_name);
 router.get('/', function(req, res) {
 
     var effect = req.query.effect;
-    var r0 = req.query.r0;
-    var g0 = req.query.g0;
-    var b0 = req.query.b0;
-    var r1 = req.query.r1;
-    var g1 = req.query.g1;
-    var b1 = req.query.b1;
-    var bpm = req.query.bpm;
+    var r0 = req.query.r0 || 0;
+    var g0 = req.query.g0 || 0;
+    var b0 = req.query.b0 || 0;
+    var r1 = req.query.r1 || 0;
+    var g1 = req.query.g1 || 0;
+    var b1 = req.query.b1 || 0;
+    var bpm = req.query.bpm || 60;
     var spotifySync = req.query.spotify_sync;
-
-    // any valid message requires an effect and primary color
-    // the page is rendered here in the case that this is the user's
-    // initial navigation to the control page in which case all paramters
-    // are expected to be null
-    if(effect == null || r0 == null || g0 == null || b0 == null){
-        res.render('control');
-        return;
-    }
 
     // spotify sync requested, so get bpm information from spotify
     if(req.query.spotify_sync){
@@ -72,7 +63,6 @@ router.get('/', function(req, res) {
     var colorString = r0 + ',' + g0 + ',' + b0;
     // add secondary color if applicable
     if(effect == "two_color_cycle"){
-        if(r1 == null || g1 == null || b1 == null) return;
         colorString += ';' + r1 + ',' + g1 + ',' +  b1;
     }
     var msg = effect + '|' + colorString + '|' + bpm;
