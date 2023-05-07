@@ -12,7 +12,8 @@ const pipe = fs.createWriteStream(pipe_name);
 
 function forceValidColor(val){
     // force colors values to be in range 0 to 255
-    if(val != null && Number.isInteger(Number(val)) && val >= 0 && val <= 255) return val;
+    if(typeof val !== "undefined" && val != null &&
+       Number.isInteger(Number(val)) && val >= 0 && val <= 255) return val;
     return 0;
 }
 
