@@ -28,6 +28,9 @@ router.get('/', function(req, res) {
     var bpm = req.query.bpm || 60;
     var spotifySync = req.query.spotify_sync;
 
+    // disallow non-numeric or non-postiive bpm
+    if(isNaN(bpm) || bpm <= 0) bpm = 60;
+
     // spotify sync requested, so get bpm information from spotify
     if(req.query.spotify_sync){
         // if not logged in, force the user to log in as otherwise API calls will necessarily fail
