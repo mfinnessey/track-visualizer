@@ -102,7 +102,7 @@ def snake(strip, color, bpm):
 
 def two_color_cycle(strip, color_1, color_2, bpm):
     """Cross-fade between two colors on LED strips."""
-    beat_length = 60.0 / bpm
+    beat_length = 1 / bpm
     strip.setBrightness(255)
     bitmask = 0xFF
     # back out color values (to avoid overcomplicating function signature or
