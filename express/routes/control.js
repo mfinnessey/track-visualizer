@@ -12,20 +12,19 @@ const pipe = fs.createWriteStream(pipe_name);
 
 function forceValidColor(val){
     // force colors values to be in range 0 to 255
-    if(typeof val !== "undefined" && val != null &&
-       Number.isInteger(Number(val)) && val >= 0 && val <= 255) return val;
+    if(Number.isInteger(Number(val)) && val >= 0 && val <= 255) return val;
     return 0;
 }
 
 router.get('/', function(req, res) {
 
     var effect = req.query.effect || "bpm_pulse";
-    var r0 = forceValidColor(req.query.r0);
-    var g0 = forceValidColor(req.query.g0);
-    var b0 = forceValidColor(req.query.b0);
-    var r1 = forceValidColor(req.query.r1);
-    var g1 = forceValidColor(req.query.g1);
-    var b1 = forceValidColor(req.query.b1);
+    var r0 = forceValidColor(req.query.r0 || 0);
+    var g0 = forceValidColor(req.query.g0 || 0);
+    var b0 = forceValidColor(req.query.b0 || 0);
+    var r1 = forceValidColor(req.query.r1 || 0);
+    var g1 = forceValidColor(req.query.g1 || 0);
+    var b1 = forceValidColor(req.query.b1 || 0);
     var bpm = req.query.bpm;
     var spotifySync = req.query.spotify_sync;
 
