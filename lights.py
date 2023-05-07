@@ -112,7 +112,7 @@ def two_color_cycle(strip, color_1, color_2, bpm):
                  color_1 & bitmask]
     c2_values = [color_2 >> 16 & bitmask, color_2 >> 8 & bitmask,
                  color_2 & bitmask]
-    step_values = map(operator.sub, c1_values, c2_values)
+    step_values = list(map(operator.sub, c1_values, c2_values))
     cur_values = c1_values
 
     # state information about current color
@@ -137,9 +137,9 @@ def two_color_cycle(strip, color_1, color_2, bpm):
 
         # update color based on shift direction
         if shift_towards_color_2:
-            cur_values = map(operator.add, cur_values, step_values)
+            cur_values = list(map(operator.add, cur_values, step_values))
         else:
-            cur_values = map(operator.sub, cur_values, step_values)
+            cur_values = list(map(operator.sub, cur_values, step_values))
 
 
 def bpm_pulse(strip, color, bpm):
