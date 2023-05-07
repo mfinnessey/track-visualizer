@@ -25,11 +25,11 @@ router.get('/', function(req, res) {
     var r1 = forceValidColor(req.query.r1 || 0);
     var g1 = forceValidColor(req.query.g1 || 0);
     var b1 = forceValidColor(req.query.b1 || 0);
-    var bpm = req.query.bpm;
+    var bpm = req.query.bpm || 60;
     var spotifySync = req.query.spotify_sync;
 
     // disallow non-numeric or non-postiive bpm
-    if(!Number.isInteger(bpm) || bpm <= 0) bpm = 60;
+    if(!Number.isInteger(Number(bpm)) || bpm <= 0) bpm = 60;
 
     // spotify sync requested, so get bpm information from spotify
     if(req.query.spotify_sync){
