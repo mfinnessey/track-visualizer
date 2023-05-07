@@ -29,7 +29,7 @@ router.get('/', function(req, res) {
     var spotifySync = req.query.spotify_sync;
 
     // disallow non-numeric or non-postiive bpm
-    if(isNaN(bpm) || bpm <= 0) bpm = 60;
+    if(!Number.isInteger(bpm) || bpm <= 0) bpm = 60;
 
     // spotify sync requested, so get bpm information from spotify
     if(req.query.spotify_sync){
