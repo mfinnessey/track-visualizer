@@ -265,7 +265,7 @@ def __light_control_thread(strip):
             solid_color(strip, colors[0])
         elif effect == "rainbow_solid":
             rainbow_solid(strip)
-        elif effect == "historgram":
+        elif effect == "histogram":
             histogram(strip)
         elif effect == "single_light":
             single_light(strip, bpm, colors[0])
