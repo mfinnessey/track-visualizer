@@ -89,8 +89,10 @@ def single_light(strip, pos, color):
     """
     strip.setBrightness(255)
     for i in range(strip.numPixels()):
-        if i != pos:
+        if i == pos:
             strip.setPixelColor(i, color)
+        else:
+            strip.setPixelColor(i, Color(0, 0, 0))
     while True:
         if new_msg:
             return
