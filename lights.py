@@ -93,6 +93,7 @@ def single_light(strip, pos, color):
             strip.setPixelColor(i, color)
         else:
             strip.setPixelColor(i, Color(0, 0, 0))
+    strip.show()
     while True:
         if new_msg:
             return
