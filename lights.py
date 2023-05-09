@@ -28,6 +28,7 @@ LED_DMA = 10
 LED_BRIGHTNESS = 255
 LED_INVERT = False
 LED_CHANNEL = 0
+STRIP_LENGTHS = [50, 48, 49, 50, 49, 48]
 
 # cava constants
 BARS_NUMBER = 6
@@ -47,19 +48,50 @@ def histogram(strip):
     Heavily derived from the example at
     https://github.com/karlstav/cava/issues/123#issuecomment-307891020
     """
+    # configuration information
     bytetype, bytesize, bytenorm = ("H", 2, 65535)
-    subprocess.Popen(["cava", "-p", ".cava-config"],
-                     stdout=subprocess.PIPE)
+
+    # spawn cava subprocess to get frequency information
+    cava = subprocess.Popen(["cava", "-p", ".cava-config"],
+                            stdout=subprocess.PIPE)
     chunk = bytesize * BARS_NUMBER
     fmt = bytetype * BARS_NUMBER
     if not os.path.exists(RAW_TARGET):
         os.mkfifo(RAW_TARGET)
     source = open(RAW_TARGET, "rb")
-
+    strip.setBrightness(255)
     while True:
+        # get data
         data = source.read(chunk)
         sample = [i / bytenorm for i in struct.unpack(fmt, data)]
-        print(sample)
+        # get bar lengths
+        for i in range(len(sample)):
+            sample[i] *= STRIP_LENGTHS[i]
+            sample[i] = int(sample[i])
+            # write out bar by bar
+            base = sum(STRIP_LENGTHS[:i])
+            max_light = sample[i] + base
+            for j in range(base, max_light + 1):
+                strip.setPixelColor(j, wheel(j * 255 / strip.numPixels()))
+            for j in range(max_light + 1, base + STRIP_LENGTHS[i]):
+                strip.setPixelColor(j, Color(0, 0, 0))
+        strip.show()
+        if new_msg:
+            cava.kill()
+            return
+
+
+def single_light(strip, pos, color):
+    """
+    Set a single specified light to be on (via bpm).
+
+    Designed for hardware testing more than anything else.
+    """
+    strip.setBrightness(255)
+    for i in range(strip.numPixels()):
+        if i != pos:
+            strip.setPixelColor(i, color)
+    while True:
         if new_msg:
             return
 
@@ -232,6 +264,8 @@ def __light_control_thread(strip):
             rainbow_solid(strip)
         elif effect == "historgram":
             histogram(strip)
+        elif effect == "single_light":
+            single_light(strip, bpm, colors[0])
         # default to bpm pulsing
         else:
             bpm_pulse(strip, colors[0], bpm)
