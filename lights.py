@@ -188,17 +188,18 @@ def two_color_cycle(strip, color_1, color_2, bpm):
         if new_msg:
             return
         # actual light strip control
+        int_cur_values = tuple(int(i) for i in cur_values)
         for i in range(strip.numPixels()):
-            strip.setPixelColor(i, Color(int(cur_values[0]),
-                                         int(cur_values[1]),
-                                         int(cur_values[2])))
+            strip.setPixelColor(i, Color(int_cur_values[0],
+                                         int_cur_values[1],
+                                         int_cur_values[2]))
         strip.show()
         time.sleep(beat_length)
 
         # change direction of shift if reaching end
-        if cur_values == c1_values:
+        if int_cur_values == c1_values:
             shift_towards_color_2 = False
-        elif cur_values == c2_values:
+        elif int_cur_values == c2_values:
             shift_towards_color_2 = True
 
         # update color based on shift direction
