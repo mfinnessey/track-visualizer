@@ -8,6 +8,7 @@ import operator  # for fun tuple math
 from rpi_ws281x import PixelStrip, Color
 import subprocess
 import struct
+from sys import getsizeof
 
 # globals (for shared state between threads)
 # shared state to notify light control thread of a newly arrived msg
@@ -32,7 +33,6 @@ STRIP_LENGTHS = [50, 48, 49, 50, 49, 48]
 
 # cava constants
 BARS_NUMBER = 6
-RAW_TARGET = "./cava.fifo"
 
 # communication constants
 
@@ -48,6 +48,7 @@ def histogram(strip):
     Heavily derived from the example at
     https://github.com/karlstav/cava/issues/123#issuecomment-307891020
     """
+    strip.setBrightness(255)
     # configuration information
     bytetype, bytesize, bytenorm = ("H", 2, 65535)
 
@@ -56,13 +57,17 @@ def histogram(strip):
                             stdout=subprocess.PIPE)
     chunk = bytesize * BARS_NUMBER
     fmt = bytetype * BARS_NUMBER
-    if not os.path.exists(RAW_TARGET):
-        os.mkfifo(RAW_TARGET)
-    source = open(RAW_TARGET, "rb")
-    strip.setBrightness(255)
+    source = cava.stdout
     while True:
         # get data
         data = source.read(chunk)
+        diff = chunk - getsizeof(data) != chunk
+        while diff > 0:
+            data += source.read(diff)
+            if new_msg:
+                cava.kill()
+                return
+
         sample = [i / bytenorm for i in struct.unpack(fmt, data)]
         # get bar lengths
         for i in range(len(sample)):
