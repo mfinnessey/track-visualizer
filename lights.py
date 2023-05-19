@@ -64,6 +64,7 @@ def histogram(strip):
         diff = chunk - getsizeof(data) != chunk
         while diff > 0:
             data += source.read(diff)
+            diff = chunk - getsizeof(data)
             if new_msg:
                 cava.kill()
                 return
