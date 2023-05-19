@@ -61,7 +61,7 @@ def histogram(strip):
     while True:
         # get data
         data = source.read(chunk)
-        diff = chunk - getsizeof(data) != chunk
+        diff = chunk - getsizeof(data)
         while diff > 0:
             data += source.read(diff)
             diff = chunk - getsizeof(data)
