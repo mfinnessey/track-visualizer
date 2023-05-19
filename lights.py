@@ -33,7 +33,7 @@ STRIP_LENGTHS = [50, 48, 49, 50, 49, 48]
 
 # cava constants
 BARS_NUMBER = 6
-FULL_DATA_SIZE = 45
+FULL_DATA_SIZE = 69
 
 # communication constants
 
@@ -61,16 +61,16 @@ def histogram(strip):
     source = cava.stdout
     while True:
         # get data
-        data = source.read(chunk)
+        data = bytearray(source.read(chunk))
         diff = FULL_DATA_SIZE - getsizeof(data)
         while diff > 0:
-            data += source.read(diff)
+            data.append(source.read(diff))
             diff = FULL_DATA_SIZE - getsizeof(data)
             if new_msg:
                 cava.kill()
                 return
 
-        sample = [i / bytenorm for i in struct.unpack(fmt, data)]
+        sample = [i / bytenorm for i in struct.unpack(fmt, bytes(data))]
         # get bar lengths
         for i in range(len(sample)):
             sample[i] *= STRIP_LENGTHS[i]
