@@ -46,13 +46,25 @@ def wheel(pos):
         pos -= 170
         return Color(pos * 3, 255 - pos * 3, 0)
 
+def wheel_rotate(pos):
+    pos = int(pos)
+    if pos < 85:
+        return Color(int(255 - pos * 3), 0, int(pos * 3))
+    elif pos < 170:
+        pos -= 85
+        return Color(0, pos * 3, 255 - pos * 3)
+    else:
+        pos -= 170
+        return Color(pos * 3, 255 - pos * 3, 0)
+
+
 def rainbow_rotate(strip, bpm):
     """Make the LED strip rotate through in a rainbow"""
     beat_length = 60.0 / bpm
     while True:
         for j in range(strip.numPixels()):
             for i in range(strip.numPixels()):
-                strip.setPixelColor(i + j % strip.numPixels(), wheel(i * 255 / strip.numPixels()))
+                strip.setPixelColor((i + j) % strip.numPixels(), wheel(i * 255 / strip.numPixels()))
                 strip.setBrightness(255)
                 # end if new message
             strip.show()
@@ -225,7 +237,7 @@ def __light_control_thread(strip):
 if __name__ == "__main__":
     pipe_name = "./track-visualizer"
     try:
-        os.mkfifo(pipe_name)
+        os.mkfifo(pipe_name)            time.sleep()
     except OSError as e:
         # don't raise error for already existing pipe
         if e.errno != errno.EEXIST:
