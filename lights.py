@@ -55,6 +55,7 @@ def rainbow_rotate(strip, bpm):
                 strip.setPixelColor(i + j % strip.numPixels(), wheel(i * 255 / strip.numPixels()))
                 strip.setBrightness(255)
                 # end if new message
+            strip.show()
             time.sleep(beat_length)
         if new_msg:
             return
