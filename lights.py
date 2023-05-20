@@ -214,6 +214,8 @@ def __light_control_thread(strip):
             solid_color(strip, colors[0])
         elif effect == "rainbow_solid":
             rainbow_solid(strip)
+        elif effect == "rainbow_rotate":
+            rainbow_rotate(strip, bpm)
         # default to bpm pulsing
         else:
             bpm_pulse(strip, colors[0], bpm)
