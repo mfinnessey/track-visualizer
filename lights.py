@@ -46,6 +46,20 @@ def wheel(pos):
         pos -= 170
         return Color(pos * 3, 255 - pos * 3, 0)
 
+def rainbow_rotate(strip, bpm):
+    """Make the LED strip rotate through in a rainbow"""
+    beat_length = 60.0 / bpm
+    while True:
+        for j in range(strip.numPixels()):
+            for i in range(strip.numPixels()):
+                strip.setPixelColor(i + j % strip.numPixels(), wheel(i * 255 / strip.numPixels()))
+                strip.setBrightness(255)
+                # end if new message
+            time.sleep(beat_length)
+        if new_msg:
+            return
+
+
 
 def rainbow_solid(strip):
     """Make the LED strip stay on in a rainbow"""
