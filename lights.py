@@ -237,7 +237,8 @@ def __light_control_thread(strip):
 if __name__ == "__main__":
     pipe_name = "./track-visualizer"
     try:
-        os.mkfifo(pipe_name)            time.sleep()
+        os.mkfifo(pipe_name)
+        time.sleep()
     except OSError as e:
         # don't raise error for already existing pipe
         if e.errno != errno.EEXIST:
