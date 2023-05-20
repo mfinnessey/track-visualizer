@@ -64,7 +64,7 @@ def rainbow_rotate(strip, bpm):
     while True:
         for j in range(strip.numPixels()):
             for i in range(strip.numPixels()):
-                strip.setPixelColor((i + j) % strip.numPixels(), wheel(i * 255 / strip.numPixels()))
+                strip.setPixelColor((i + j) % strip.numPixels(), wheel_rotate(i * 255 / strip.numPixels()))
                 strip.setBrightness(255)
                 # end if new message
             strip.show()
