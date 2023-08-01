@@ -2,6 +2,8 @@
 
 Track Visualizer provides the ability to control Wu281x addressable RGB LEDs via a web server hosted on a Raspberry Pi. A variety of light effects can be selected from the web page. Additionally, there is integration with Spotify's API to enable synchronizing the light effects with the playing track.
 
+![Example of Installation](https://github.com/mfinnessey/track-visualizer/assets/15825352/cb0997ca-7daf-4cda-90b2-982149d55323)
+
 # Installation and Running
 
 You must have relatively recent versions of `python3`, `node`, and `npm` installed on the Raspberry Pi. If running Raspbian, `sudo apt update && sudo apt install python3 nodejs` should be sufficient to get you going.
