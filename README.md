@@ -9,7 +9,7 @@ https://github.com/mfinnessey/track-visualizer/assets/15825352/b4d18057-d375-4c9
 
 # Installation and Running
 ## Acknowledgements
-    This project very much depends on ExpressJS(https://expressjs.com) and the [RPi WS281x Python bindings](https://github.com/rpi-ws281x/rpi-ws281x-python).
+This project very much depends on ExpressJS(https://expressjs.com) and the [RPi WS281x Python bindings](https://github.com/rpi-ws281x/rpi-ws281x-python).
 
 ## Instructions
 
