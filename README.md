@@ -4,6 +4,9 @@ Track Visualizer provides the ability to control Wu281x addressable RGB LEDs via
 
 ![Example of Installation](https://github.com/mfinnessey/track-visualizer/assets/15825352/cb0997ca-7daf-4cda-90b2-982149d55323)
 
+https://github.com/mfinnessey/track-visualizer/assets/15825352/b4d18057-d375-4c96-b9bb-7922abb23868
+
+
 # Installation and Running
 ## Acknowledgements
     This project very much depends on ExpressJS(https://expressjs.com) and the [RPi WS281x Python bindings](https://github.com/rpi-ws281x/rpi-ws281x-python).
